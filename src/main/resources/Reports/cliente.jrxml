@@ -28,7 +28,7 @@
                 <staticText>
                     <reportElement x="40" y="16" width="260" height="30" forecolor="#FFFFFF" uuid="9c374dda-d4eb-479c-abfe-80c72be1a332"/>
                     <textElement>
-                        <font fontName="DejaVu Serif" size="24"/>
+                        <font fontName="Serif" size="24"/>
                     </textElement>
                     <text><![CDATA[Centro Naturista]]></text>
                 </staticText>

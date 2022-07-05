@@ -8,8 +8,15 @@ import Alejandro.BackendCentroNaturista.Repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+//import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+//import org.springframework.security.crypto.password.PasswordEncoder;
+
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,10 +31,32 @@ import java.util.regex.Pattern;
 
 //@RequestMapping("/FlorDeJamaica")
 public class UsuarioController{
+    private static final Argon2 ARGON2 = Argon2Factory.create();
+
+    private static final int ITERATIONS = 2;
+    private static final int MEMORY= 65536;
+    private static final int PARALLELISM = 1;
     @Autowired
     UsuarioRepository usuarioRespository;
     @Autowired
     RolController rolController;
+    @PostMapping("/usuarios")
+    String validation(@RequestBody String credenciales){
+        JSONObject json = new JSONObject(credenciales);
+        String usuario = json.getString("usuario");
+        String contrasena = json.getString("contrasena");
+        List<Tblusuario> usuarios = new ArrayList<>();
+        usuarios = (List<Tblusuario>) usuarioRespository.findAll();
+        //System.out.println("User:" + usuario + " Pass" + contrasena  );
+        for (Tblusuario u:usuarios) {
+            if((u.getUsucorreo().equals(usuario)) && (ARGON2.verify(u.getUsucontrasena(), contrasena ))){
+
+                return "OK";
+            }
+
+        }
+        return "NO";
+    }
     @PostMapping("/usuario")
     Tblusuario newUser(@RequestBody Tblusuario tblusuario) {
         boolean flag = false;
@@ -59,6 +88,10 @@ public class UsuarioController{
         if(tblusuario.getUsucontrasena().equals("")){
             throw new Exception("P-400","Contraseña incorrecta");
         }
+        //String pass  = BCrypt.hashpw(tblusuario.getUsucontrasena(), BCrypt.gensalt());
+        String pass = ARGON2.hash(ITERATIONS, MEMORY, PARALLELISM, tblusuario.getUsucontrasena());
+        tblusuario.setUsucontrasena(pass);
+        //System.out.println("contraseña:" + tblusuario.getUsucontrasena());
         return usuarioRespository.save(tblusuario);
     }
     @GetMapping("/usuario")
