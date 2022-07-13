@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 //@RequestMapping("/FlorDeJamaica")
 public class UsuarioController{
+    private List<Tblusuario> usuarios;
     private static final Argon2 ARGON2 = Argon2Factory.create();
 
     private static final int ITERATIONS = 2;
@@ -50,12 +51,12 @@ public class UsuarioController{
         String usuario = json.getString("usuario");
         String contrasena = json.getString("contrasena");
         List<Tblusuario> usuarios = new ArrayList<>();
-        usuarios = (List<Tblusuario>) usuarioRespository.findAll();
+        //usuarios = (List<Tblusuario>) usuarioRespository.findAll();
         //System.out.println("User:" + usuario + " Pass" + contrasena  );
-        for (Tblusuario u:usuarios) {
+        for (Tblusuario u:this.usuarios) {
             if((u.getUsucorreo().equals(usuario)) && (ARGON2.verify(u.getUsucontrasena(), contrasena ))){
                 int r = u.getTblrol_rolid();
-                Tblrol rol = rolRepository.findById(Long.valueOf(r)).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));
+                Tblrol rol = rolRepository.findById(Long.valueOf(r)).orElseThrow(() -> new Exception("p-400","No se encontro el rol"));
                 return rol.getRolnombre();
             }
 
@@ -101,7 +102,8 @@ public class UsuarioController{
     }
     @GetMapping("/usuario")
     public List<Tblusuario> getAllUsers() {
-        return (List<Tblusuario>) usuarioRespository.findAll();
+        this.usuarios = (List<Tblusuario>) usuarioRespository.findAll();
+        return this.usuarios;
     }
     @GetMapping("/usuarios")
     public String getAllUsersReport() throws FileNotFoundException, JRException {
