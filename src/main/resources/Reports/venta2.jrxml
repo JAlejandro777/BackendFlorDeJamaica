@@ -193,7 +193,7 @@
     <pageFooter>
         <band height="116" splitType="Stretch">
             <staticText>
-                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="300" y="-1" width="140" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="bb6bee04-03b9-4f2a-8f8e-c655dc5e18dd"/>
+                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="290" y="-1" width="150" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="bb6bee04-03b9-4f2a-8f8e-c655dc5e18dd"/>
                 <textElement>
                     <font fontName="Serif" size="20"/>
                 </textElement>
@@ -217,7 +217,7 @@
                 <textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="300" y="29" width="140" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="d4b471bf-1a83-463c-bdab-e2aa51103629"/>
+                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="290" y="29" width="150" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="d4b471bf-1a83-463c-bdab-e2aa51103629"/>
                 <textElement>
                     <font fontName="Serif" size="20"/>
                 </textElement>
@@ -231,7 +231,7 @@
                 <textFieldExpression><![CDATA[$P{monto}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="300" y="59" width="140" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="974db3f8-38ea-444b-9635-6b7008254580"/>
+                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="290" y="59" width="150" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="974db3f8-38ea-444b-9635-6b7008254580"/>
                 <textElement>
                     <font fontName="Serif" size="20"/>
                 </textElement>
@@ -244,6 +244,10 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$P{devolucion}]]></textFieldExpression>
             </textField>
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="-1" width="290" height="90" backcolor="#1B012B" uuid="73d181fc-b988-43c8-8737-a521706b6355"/>
+                <text><![CDATA[]]></text>
+            </staticText>
         </band>
     </pageFooter>
     <summary>
