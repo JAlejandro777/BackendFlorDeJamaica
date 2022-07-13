@@ -111,8 +111,8 @@ public class UsuarioController{
         JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
         File fichero = new File("src/main/resources/logoFJ.png");
         List<Tblusuario> usuarios = new ArrayList<>();
-        usuarios = (List<Tblusuario>) usuarioRespository.findAll();
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(usuarios);
+        //usuarios = (List<Tblusuario>) usuarioRespository.findAll();
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(this.usuarios);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("Created By","Alejandro");
         parameters.put("path", fichero.getAbsolutePath());

@@ -22,6 +22,7 @@ import java.util.*;
 @RequiredArgsConstructor
 
 public class ProductoController {
+    private List<Tblproducto> productos;
     @Autowired
     ProductoRepository productoRepository;
     @Autowired
@@ -76,8 +77,8 @@ public class ProductoController {
     }
     @GetMapping("/producto")
     public List<Tblproducto> getAllProducts() {
-
-        return (List<Tblproducto>) productoRepository.findAll();
+        this.productos = (List<Tblproducto>) productoRepository.findAll();
+        return this.productos;
     }
     @GetMapping("/producto/{id}")
     List<Tblproducto>  getProduct(@PathVariable String id) {
@@ -92,8 +93,8 @@ public class ProductoController {
             JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
             File fichero = new File("src/main/resources/logoFJ.png");
             List<Tblproducto> productos = new ArrayList<>();
-            productos = (List<Tblproducto>) productoRepository.findAll();
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(productos);
+            //productos = (List<Tblproducto>) productoRepository.findAll();
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(this.productos);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("Created By", "Alejandro");
             parameters.put("path", fichero.getAbsolutePath());

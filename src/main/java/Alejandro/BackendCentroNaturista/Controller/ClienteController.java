@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 
 public class ClienteController {
+    private List<Tblcliente> clientes;
     @Autowired
     ClienteRepository clienteRepository;
     @PostMapping("/cliente")
@@ -46,8 +47,8 @@ public class ClienteController {
     }
     @GetMapping("/cliente")
     public List<Tblcliente> getAllCustomers() {
-
-        return (List<Tblcliente>) clienteRepository.findAll();
+        this.clientes = (List<Tblcliente>) clienteRepository.findAll();
+        return this.clientes;
     }
     @GetMapping("/cliente/{id}")
     List<Tblcliente>  getCustomer(@PathVariable String id) {
@@ -62,8 +63,8 @@ public class ClienteController {
             JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
             File fichero = new File("src/main/resources/logoFJ.png");
             List<Tblcliente> clientes = new ArrayList<>();
-            clientes = (List<Tblcliente>) clienteRepository.findAll();
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(clientes);
+            //clientes = (List<Tblcliente>) clienteRepository.findAll();
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(this.clientes);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("Created By", "Alejandro");
             parameters.put("path", fichero.getAbsolutePath());

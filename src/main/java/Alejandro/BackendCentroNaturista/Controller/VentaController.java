@@ -30,6 +30,7 @@ import java.util.*;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class VentaController extends HttpServlet {
+    private List<Tblventa> ventas;
     private Integer total;
     private Integer monto;
     private Integer devolucion;
@@ -208,6 +209,11 @@ public class VentaController extends HttpServlet {
     Tblventa getVenta(@PathVariable Long id) {
         return ventaRepository.findById(id).orElseThrow(() -> new Exception("p-400","No se encontro la venta"));
     }
+    @GetMapping("/ventasAll")
+    List<Tblventa> allventas(){
+        this.ventas = (List<Tblventa>) ventaRepository.findAll();
+        return this.ventas;
+    }
     @GetMapping("/venta")
     public String getAllCustomers(HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException, JRException, ServletException, IOException {
         try{
@@ -215,9 +221,8 @@ public class VentaController extends HttpServlet {
             JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
             File fichero = new File("src/main/resources/logoFJ.png");
             List<Tblventa> ventas = new ArrayList<>();
-            ventas = (List<Tblventa>) ventaRepository.findAll();
-
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(ventas);
+            //ventas = (List<Tblventa>) ventaRepository.findAll();
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(this.ventas);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("Created By","Alejandro");
             parameters.put("path", fichero.getAbsolutePath());
