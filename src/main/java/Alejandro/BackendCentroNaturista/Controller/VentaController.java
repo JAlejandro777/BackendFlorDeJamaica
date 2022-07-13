@@ -9,6 +9,8 @@ import Alejandro.BackendCentroNaturista.Repositories.VentaRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
@@ -27,8 +29,10 @@ import java.util.*;
 @RestController
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-
 public class VentaController extends HttpServlet {
+    private Integer total;
+    private Integer monto;
+    private Integer devolucion;
     @Autowired
     VentaRepository ventaRepository;
     @Autowired
@@ -37,22 +41,101 @@ public class VentaController extends HttpServlet {
     ClienteController clienteController;
     @Autowired
     ProductoController productoController;
+    @PutMapping("/sale/{id}")
+    public Tblventa updateSale(@PathVariable("id") long id, @RequestBody Tblventa ven) {
+        System.out.println(ven);
+        String idProduct = "";
+        for (Tblproducto variable : productoController.getAllProducts())
+        {
+            if (variable.getPronombre().equals(ven.getVenproducto())) {
+                idProduct = variable.getProcodigo();
+            }
+        }
+        Tblproducto producto = productoRepository.findById(idProduct).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));;
+        try {
+            Tblventa venta = ventaRepository.findById(id).orElseThrow(() -> new Exception("p-400", "No se encontro la venta"));
+            DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            venta.setVenfechaactual(dtf2.format(LocalDateTime.now()));
+            venta.setVenfechaactual(ven.getVenfechaactual());
+            venta.setVencliente(ven.getVencliente());
+            venta.setVenproducto(ven.getVenproducto());
+            venta.setVeniva(ven.getVeniva());
+            if(venta.getVencantidadunidades() > ven.getVencantidadunidades()){
+                int ud = producto.getProunidadesdisponibles() + (venta.getVencantidadunidades() - ven.getVencantidadunidades());
+                producto.setProunidadesdisponibles(ud);
+                System.out.println(producto.getProunidadesdisponibles());
+            }else{
+
+                int ud = producto.getProunidadesdisponibles() - (ven.getVencantidadunidades() - venta.getVencantidadunidades());
+                producto.setProunidadesdisponibles(ud);
+                System.out.println(producto.getProunidadesdisponibles());
+            }
+            venta.setVencantidadunidades(ven.getVencantidadunidades());
+            venta.setVenvalorpagar(ven.getVenvalorpagar());
+            System.out.println(venta.getVencantidadunidades());
+            System.out.println(ven.getVencantidadunidades());
+
+            //
+            productoRepository.save(producto);
+            return ventaRepository.save(venta);
+        }catch (Exception e){
+            throw new Exception("P-400","NO");
+        }
+
+    }
+    @DeleteMapping("/sale/{id}")
+    String delete(@PathVariable("id") long id){
+        //System.out.println("JAJAJAJA");
+        String idProduct = "";
+        Tblventa ven = ventaRepository.findById(id).orElseThrow(() -> new Exception("p-400", "No se encontro la venta"));
+        for (Tblproducto variable : productoController.getAllProducts())
+        {
+            if (variable.getPronombre().equals(ven.getVenproducto())) {
+                idProduct = variable.getProcodigo();
+            }
+        }
+        Tblproducto producto = productoRepository.findById(idProduct).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));;
+        try {
+            producto.setProunidadesdisponibles(producto.getProunidadesdisponibles() + ven.getVencantidadunidades());
+            productoRepository.save(producto);
+            ventaRepository.deleteById(id);
+            return "OK";
+        } catch (Exception e) {
+            return "NO";
+        }
+
+    }
+    @PostMapping("/data")
+    String datos(@RequestBody String object ){
+        try{
+            JSONObject json = new JSONObject(object);
+            Integer total = json.getInt("total");
+            Integer monto = json.getInt("monto");
+            Integer devolucion = json.getInt("devolucion");
+            this.total = total;
+            this.monto = monto;
+            this.devolucion = devolucion;
+
+            return "Ok";
+        }catch (Exception e){
+           return "NO";
+        }
+
+    }
     @PostMapping("/factura")
-    String invoice(@RequestBody List<Object> productos) throws FileNotFoundException, JRException {
+    String invoice(@RequestBody List<Object> productos) throws JRException {
         //Reporte
         DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         List<Tblventa> venta = new ArrayList<>();
-        int total = 0;
         for (Object variable : productos){
             Tblventa ven = new Tblventa();
             List<Object> p = new ArrayList<>((Collection) variable);
-            ven.setVencantidadunidades((Integer) p.get(0));
-            ven.setVeniva((Integer) p.get(1));
-            ven.setVenvalorpagar((Integer) p.get(2));
-            total += ven.getVenvalorpagar();
-            ven.setVenproducto((String) p.get(3));
-            ven.setVencliente((String) p.get(4));
-            ven.setVenfechaactual(dtf2.format(LocalDateTime.now()));
+            ven.setVencantidadunidades((Integer) p.get(1));
+            ven.setVeniva((Integer) p.get(2));
+            ven.setVenvalorpagar((Integer) p.get(3));
+            ven.setVenproducto((String) p.get(4));
+            ven.setVencliente((String) p.get(5));
+            ven.setVenfechaactual((String) p.get(6));
             venta.add(ven);
 
         }
@@ -64,16 +147,16 @@ public class VentaController extends HttpServlet {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("Created By","Alejandro");
         parameters.put("path", fichero.getAbsolutePath());
-        parameters.put("total", total);
+        parameters.put("total", this.total);
+        parameters.put("monto", this.monto);
+        parameters.put("devolucion", this.devolucion);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,parameters,dataSource);
         byte[] pdf = JasperExportManager.exportReportToPdf(jasperPrint);
         String pdfBase64 = Base64.getEncoder().encodeToString(pdf);
         return pdfBase64;
-
-         
     }
     @PostMapping("/venta")
-    String newUser(@RequestBody Tblventa tblventa) throws FileNotFoundException, JRException {
+    Tblventa newUser(@RequestBody Tblventa tblventa) throws FileNotFoundException, JRException {
         String idProduct = "";
         if(tblventa.getVencantidadunidades() <= 0){
             throw new Exception("P-400","Cantidad Unidades incorrecta");
@@ -117,9 +200,9 @@ public class VentaController extends HttpServlet {
         //System.out.println(producto.getProunidadesdisponibles());
         producto.setProunidadesdisponibles(producto.getProunidadesdisponibles() - tblventa.getVencantidadunidades());
         //System.out.println(producto.getProunidadesdisponibles());
-        ventaRepository.save(tblventa);
         productoRepository.save(producto);
-        return "";
+        Tblventa tblventa2 = ventaRepository.save(tblventa);
+        return tblventa2;
     }
     @GetMapping("/venta/{id}")
     Tblventa getVenta(@PathVariable Long id) {

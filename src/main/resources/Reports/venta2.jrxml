@@ -15,6 +15,8 @@
     </style>
     <parameter name="path" class="java.lang.String"/>
     <parameter name="total" class="java.lang.Integer"/>
+    <parameter name="monto" class="java.lang.Integer"/>
+    <parameter name="devolucion" class="java.lang.Integer"/>
     <field name="vencantidadunidades" class="java.lang.Integer"/>
     <field name="veniva" class="java.lang.Integer"/>
     <field name="venvalorpagar" class="java.lang.Integer"/>
@@ -179,7 +181,7 @@
         </band>
     </detail>
     <columnFooter>
-        <band height="7" splitType="Stretch">
+        <band height="4" splitType="Stretch">
             <line>
                 <reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="1133a906-5b71-476e-9f3e-bc97c97058c1"/>
                 <graphicElement>
@@ -189,16 +191,16 @@
         </band>
     </columnFooter>
     <pageFooter>
-        <band height="62" splitType="Stretch">
+        <band height="116" splitType="Stretch">
             <staticText>
-                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="350" y="0" width="90" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="bb6bee04-03b9-4f2a-8f8e-c655dc5e18dd"/>
+                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="300" y="-1" width="140" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="bb6bee04-03b9-4f2a-8f8e-c655dc5e18dd"/>
                 <textElement>
                     <font fontName="Serif" size="20"/>
                 </textElement>
                 <text><![CDATA[TOTAL]]></text>
             </staticText>
             <frame>
-                <reportElement mode="Opaque" x="0" y="30" width="555" height="24" forecolor="#D0B48E" backcolor="#000000" uuid="729c3539-f946-4d0e-a0a7-bda2815ea1b0"/>
+                <reportElement mode="Opaque" x="0" y="89" width="555" height="24" forecolor="#D0B48E" backcolor="#000000" uuid="729c3539-f946-4d0e-a0a7-bda2815ea1b0"/>
                 <textField pattern="EEEEE dd MMMMM yyyy">
                     <reportElement style="Column header" x="20" y="1" width="197" height="20" forecolor="#FFFFFF" uuid="137d38c7-1a83-4fc5-b156-9d5f1b1a0ddc"/>
                     <textElement verticalAlignment="Middle">
@@ -208,11 +210,39 @@
                 </textField>
             </frame>
             <textField>
-                <reportElement mode="Opaque" x="440" y="0" width="115" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="e89b1c6a-590d-4782-bb54-d20009d9efea"/>
+                <reportElement mode="Opaque" x="440" y="-1" width="115" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="e89b1c6a-590d-4782-bb54-d20009d9efea"/>
                 <textElement>
                     <font fontName="Serif" size="20"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="300" y="29" width="140" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="d4b471bf-1a83-463c-bdab-e2aa51103629"/>
+                <textElement>
+                    <font fontName="Serif" size="20"/>
+                </textElement>
+                <text><![CDATA[MONTO]]></text>
+            </staticText>
+            <textField>
+                <reportElement mode="Opaque" x="440" y="29" width="115" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="179b4927-184d-4398-b367-46b4e5b74372"/>
+                <textElement>
+                    <font fontName="Serif" size="20"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{monto}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="FixRelativeToBottom" mode="Opaque" x="300" y="59" width="140" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="974db3f8-38ea-444b-9635-6b7008254580"/>
+                <textElement>
+                    <font fontName="Serif" size="20"/>
+                </textElement>
+                <text><![CDATA[DEVOLUCIÓN]]></text>
+            </staticText>
+            <textField>
+                <reportElement mode="Opaque" x="440" y="59" width="115" height="30" forecolor="#FFFFFF" backcolor="#1B012B" uuid="c90a9970-d501-4be4-8277-677c82c99ff4"/>
+                <textElement>
+                    <font fontName="Serif" size="20"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{devolucion}]]></textFieldExpression>
             </textField>
         </band>
     </pageFooter>

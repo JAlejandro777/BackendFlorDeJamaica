@@ -2,8 +2,10 @@ package Alejandro.BackendCentroNaturista.Controller;
 
 
 import Alejandro.BackendCentroNaturista.Excepcion.Exception;
+import Alejandro.BackendCentroNaturista.Model.Tblproducto;
 import Alejandro.BackendCentroNaturista.Model.Tblrol;
 import Alejandro.BackendCentroNaturista.Model.Tblusuario;
+import Alejandro.BackendCentroNaturista.Repositories.RolRepository;
 import Alejandro.BackendCentroNaturista.Repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
@@ -39,6 +41,8 @@ public class UsuarioController{
     @Autowired
     UsuarioRepository usuarioRespository;
     @Autowired
+    RolRepository rolRepository;
+    @Autowired
     RolController rolController;
     @PostMapping("/usuarios")
     String validation(@RequestBody String credenciales){
@@ -50,8 +54,9 @@ public class UsuarioController{
         //System.out.println("User:" + usuario + " Pass" + contrasena  );
         for (Tblusuario u:usuarios) {
             if((u.getUsucorreo().equals(usuario)) && (ARGON2.verify(u.getUsucontrasena(), contrasena ))){
-
-                return "OK";
+                int r = u.getTblrol_rolid();
+                Tblrol rol = rolRepository.findById(Long.valueOf(r)).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));
+                return rol.getRolnombre();
             }
 
         }
