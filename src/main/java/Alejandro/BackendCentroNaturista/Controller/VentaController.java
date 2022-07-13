@@ -195,7 +195,9 @@ public class VentaController extends HttpServlet {
             throw new Exception("P-400","Cliente incorrecto");
         }
         DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        tblventa.setVenfechaactual(dtf2.format(LocalDateTime.now()));
+        String fecha = dtf2.format(LocalDateTime.now());
+        System.out.println(fecha);
+        tblventa.setVenfechaactual(fecha);
         //System.out.println(tblventa.getVenfechaactual());
         Tblproducto producto = productoRepository.findById(idProduct).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));;
         //System.out.println(producto.getProunidadesdisponibles());
