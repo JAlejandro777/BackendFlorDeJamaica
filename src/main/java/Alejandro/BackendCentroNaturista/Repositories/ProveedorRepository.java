@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProveedorRepository extends JpaRepository<Tblproveedor, Integer> {
+public interface ProveedorRepository extends JpaRepository<Tblproveedor, String> {
 
 }

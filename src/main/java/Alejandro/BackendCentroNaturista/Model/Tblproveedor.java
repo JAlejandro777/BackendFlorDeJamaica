@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Table(name="tblproveedor")
 public class Tblproveedor {
     @Id
-    private int proid;
+    private String proid;
     @Column(name = "pronombre")
     private String pronombre;
     @Column(name = "procontacto")
@@ -26,18 +26,18 @@ public class Tblproveedor {
     public Tblproveedor() {
     }
 
-    public Tblproveedor(int proid, String pronombre, String procontacto, String prociudad) {
+    public Tblproveedor(String proid, String pronombre, String procontacto, String prociudad) {
         this.proid = proid;
         this.pronombre = pronombre;
         this.procontacto = procontacto;
         this.prociudad = prociudad;
     }
 
-    public int getProid() {
+    public String getProid() {
         return proid;
     }
 
-    public void setProid(int proid) {
+    public void setProid(String proid) {
         this.proid = proid;
     }
 

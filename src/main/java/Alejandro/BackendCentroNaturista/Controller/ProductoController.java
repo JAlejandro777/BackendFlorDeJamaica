@@ -5,6 +5,7 @@ import Alejandro.BackendCentroNaturista.Model.Tblproducto;
 import Alejandro.BackendCentroNaturista.Model.Tblproveedor;
 import Alejandro.BackendCentroNaturista.Model.Tblusuario;
 import Alejandro.BackendCentroNaturista.Repositories.ProductoRepository;
+import Alejandro.BackendCentroNaturista.Repositories.ProveedorRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -27,6 +28,8 @@ public class ProductoController {
     ProductoRepository productoRepository;
     @Autowired
     ProveedorController proveedorController;
+    @Autowired
+    ProveedorRepository proveedorRepository;
     @Autowired
     UsuarioController usuarioController;
     @PostMapping("/producto")
@@ -79,6 +82,15 @@ public class ProductoController {
     public List<Tblproducto> getAllProducts() {
         this.productos = (List<Tblproducto>) productoRepository.findAll();
         return this.productos;
+    }
+    @GetMapping("/productoView")
+    public List<Tblproducto> getAllProductsView() {
+        List<Tblproducto> productosV = (List<Tblproducto>) productoRepository.findAll();
+        for(Tblproducto i: productosV){
+            Tblproveedor p = proveedorRepository.findById(i.getTblproveedor_proid()).orElseThrow(() -> new Exception("p-400","No se encontro El producto"));
+            i.setTblproveedor_proid(p.getPronombre());
+        }
+        return productosV;
     }
     @GetMapping("/producto/{id}")
     List<Tblproducto>  getProduct(@PathVariable String id) {

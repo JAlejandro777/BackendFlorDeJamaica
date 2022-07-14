@@ -16,7 +16,7 @@ public class Tblproducto {
     @Id
     private String procodigo;
     @Column(name = "tblproveedor_proid")
-    private int tblproveedor_proid;
+    private String tblproveedor_proid;
     @Column(name = "tblusuario_usuid")
     private String tblusuario_usuid;
     @Column(name = "pronombre")
@@ -37,7 +37,7 @@ public class Tblproducto {
     public Tblproducto() {
     }
 
-    public Tblproducto(String procodigo, int tblproveedor_proid, String tblusuario_usuid, String pronombre, String procaracteristica, String procategoria, int propreciosugerido, int prounidadesdisponibles, String profechaingreso, String profechavencimiento) {
+    public Tblproducto(String procodigo, String tblproveedor_proid, String tblusuario_usuid, String pronombre, String procaracteristica, String procategoria, int propreciosugerido, int prounidadesdisponibles, String profechaingreso, String profechavencimiento) {
         this.procodigo = procodigo;
         this.tblproveedor_proid = tblproveedor_proid;
         this.tblusuario_usuid = tblusuario_usuid;
@@ -58,11 +58,11 @@ public class Tblproducto {
         this.procodigo = procodigo;
     }
 
-    public int getTblproveedor_proid() {
+    public String getTblproveedor_proid() {
         return tblproveedor_proid;
     }
 
-    public void setTblproveedor_proid(int tblproveedor_proid) {
+    public void setTblproveedor_proid(String tblproveedor_proid) {
         this.tblproveedor_proid = tblproveedor_proid;
     }
 
