@@ -90,7 +90,8 @@ public class ProductoController {
             Tblproveedor p = proveedorRepository.findById(i.getTblproveedor_proid()).orElseThrow(() -> new Exception("p-400","No se encontro El producto"));
             i.setTblproveedor_proid(p.getPronombre());
         }
-        return productosV;
+        this.productos = productosV;
+        return this.productos;
     }
     @GetMapping("/producto/{id}")
     List<Tblproducto>  getProduct(@PathVariable String id) {
