@@ -34,10 +34,15 @@ public class ProductoController {
     UsuarioController usuarioController;
     @PostMapping("/producto")
     Tblproducto newProduct(@RequestBody Tblproducto tblproducto) throws ParseException {
+        for (Tblproducto i : this.productos){
+            if (i.getProcodigo().equals(tblproducto.getProcodigo())){
+                throw new Exception("P-400","Código existente!");
+            }
+        }
         boolean flag = false;
         for (Tblproveedor variable : proveedorController.getAllSupplier())
         {
-            if (variable.getProid() == tblproducto.getTblproveedor_proid()) {
+            if (variable.getProid().equals(tblproducto.getTblproveedor_proid())) {
                 flag = true;
             }
         }
@@ -86,11 +91,16 @@ public class ProductoController {
     @GetMapping("/productoView")
     public List<Tblproducto> getAllProductsView() {
         List<Tblproducto> productosV = (List<Tblproducto>) productoRepository.findAll();
+        System.out.println(productosV);
         for(Tblproducto i: productosV){
+
             Tblproveedor p = proveedorRepository.findById(i.getTblproveedor_proid()).orElseThrow(() -> new Exception("p-400","No se encontro El producto"));
             i.setTblproveedor_proid(p.getPronombre());
+            System.out.println(i.getTblproveedor_proid());
         }
+        System.out.println(productosV);
         this.productos = productosV;
+        System.out.println(this.productos);
         return this.productos;
     }
     @GetMapping("/producto/{id}")
@@ -107,6 +117,7 @@ public class ProductoController {
             File fichero = new File("src/main/resources/logoFJ.png");
             List<Tblproducto> productos = new ArrayList<>();
             //productos = (List<Tblproducto>) productoRepository.findAll();
+            System.out.println(this.productos);
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(this.productos);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("Created By", "Alejandro");
