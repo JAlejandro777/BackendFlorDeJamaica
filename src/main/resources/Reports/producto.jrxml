@@ -15,7 +15,7 @@
     </style>
     <parameter name="path" class="java.lang.String"/>
     <field name="procodigo" class="java.lang.String"/>
-    <field name="tblproveedor_proid" class="java.lang.Integer"/>
+    <field name="tblproveedor_proid" class="java.lang.String"/>
     <field name="tblusuario_usuid" class="java.lang.String"/>
     <field name="pronombre" class="java.lang.String"/>
     <field name="procaracteristica" class="java.lang.String"/>
