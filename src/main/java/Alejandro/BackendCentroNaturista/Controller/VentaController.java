@@ -56,7 +56,8 @@ public class VentaController extends HttpServlet {
         try {
             Tblventa venta = ventaRepository.findById(id).orElseThrow(() -> new Exception("p-400", "No se encontro la venta"));
             DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            venta.setVenfechaactual(dtf2.format(LocalDateTime.now()));
+            String fecha = dtf2.format(LocalDateTime.now());
+            venta.setVenfechaactual(fecha);
             venta.setVenfechaactual(ven.getVenfechaactual());
             venta.setVencliente(ven.getVencliente());
             venta.setVenproducto(ven.getVenproducto());
@@ -130,10 +131,11 @@ public class VentaController extends HttpServlet {
         List<Tblventa> venta = new ArrayList<>();
         for (Object variable : productos){
             Tblventa ven = new Tblventa();
-            List<Object> p = new ArrayList<>((Collection) variable);
-            ven.setVencantidadunidades((Integer) p.get(1));
-            ven.setVeniva((Integer) p.get(2));
-            ven.setVenvalorpagar((Integer) p.get(3));
+            List<String> p = new ArrayList<>();
+            p.add((String) variable);
+            ven.setVencantidadunidades(Integer.parseInt(p.get(1)));
+            ven.setVeniva(Integer.parseInt(p.get(2)));
+            ven.setVenvalorpagar(Integer.parseInt(p.get(3)));
             ven.setVenproducto((String) p.get(4));
             ven.setVencliente((String) p.get(5));
             ven.setVenfechaactual((String) p.get(6));

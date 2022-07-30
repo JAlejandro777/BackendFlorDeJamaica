@@ -13,6 +13,8 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 //import org.springframework.beans.factory.annotation.Autowired;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -45,6 +47,20 @@ public class UsuarioController{
     RolRepository rolRepository;
     @Autowired
     RolController rolController;
+    @Autowired
+    private JavaMailSender mailSender;
+    @PostMapping("/recoverPassword")
+    String recoverPassword(@RequestBody String datos){
+        SimpleMailMessage email = new SimpleMailMessage();
+
+        email.setTo("alejitomadrid77@gmail.com");
+        email.setSubject("Prueba correo");
+        email.setText("Alejandro Tu papa :3");
+
+        mailSender.send(email);
+
+        return "OK";
+    }
     @PostMapping("/usuarios")
     String validation(@RequestBody String credenciales){
         JSONObject json = new JSONObject(credenciales);

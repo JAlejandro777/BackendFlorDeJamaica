@@ -51,9 +51,11 @@ public class ClienteController {
         return this.clientes;
     }
     @GetMapping("/cliente/{id}")
-    List<Tblcliente>  getCustomer(@PathVariable String id) {
+    public List<Tblcliente>  getCustomer(@PathVariable String id) {
         List<Tblcliente> customers = new ArrayList<>();
+        //System.out.println(id);
         customers.add(clienteRepository.findById(id).orElseThrow(() -> new Exception("p-400","No se encontro el Cliente")));
+        //System.out.println(customers.get(0).getClicorreo());
         return customers;
     }
     @GetMapping("/clientes")
