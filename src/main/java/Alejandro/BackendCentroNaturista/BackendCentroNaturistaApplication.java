@@ -12,6 +12,6 @@ public class BackendCentroNaturistaApplication {
 	public static void main(String[] args) {
 
 		SpringApplication.run(BackendCentroNaturistaApplication.class, args);
-		System.out.println("alejo");
+		System.out.println("Made By ALEJANDRO INFANTE ©");
 	}
 }

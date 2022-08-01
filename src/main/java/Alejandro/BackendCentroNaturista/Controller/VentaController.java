@@ -44,7 +44,7 @@ public class VentaController extends HttpServlet {
     ProductoController productoController;
     @PutMapping("/sale/{id}")
     public Tblventa updateSale(@PathVariable("id") long id, @RequestBody Tblventa ven) {
-        System.out.println(ven);
+        //System.out.println(ven);
         String idProduct = "";
         for (Tblproducto variable : productoController.getAllProducts())
         {
@@ -58,24 +58,25 @@ public class VentaController extends HttpServlet {
             DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String fecha = dtf2.format(LocalDateTime.now());
             venta.setVenfechaactual(fecha);
-            venta.setVenfechaactual(ven.getVenfechaactual());
+            //System.out.println("fechaaa"+ venta.getVenfechaactual());
+            //venta.setVenfechaactual(ven.getVenfechaactual());
             venta.setVencliente(ven.getVencliente());
             venta.setVenproducto(ven.getVenproducto());
             venta.setVeniva(ven.getVeniva());
             if(venta.getVencantidadunidades() > ven.getVencantidadunidades()){
                 int ud = producto.getProunidadesdisponibles() + (venta.getVencantidadunidades() - ven.getVencantidadunidades());
                 producto.setProunidadesdisponibles(ud);
-                System.out.println(producto.getProunidadesdisponibles());
+                //System.out.println(producto.getProunidadesdisponibles());
             }else{
 
                 int ud = producto.getProunidadesdisponibles() - (ven.getVencantidadunidades() - venta.getVencantidadunidades());
                 producto.setProunidadesdisponibles(ud);
-                System.out.println(producto.getProunidadesdisponibles());
+                //System.out.println(producto.getProunidadesdisponibles());
             }
             venta.setVencantidadunidades(ven.getVencantidadunidades());
             venta.setVenvalorpagar(ven.getVenvalorpagar());
-            System.out.println(venta.getVencantidadunidades());
-            System.out.println(ven.getVencantidadunidades());
+            //System.out.println(venta.getVencantidadunidades());
+            //System.out.println(ven.getVencantidadunidades());
 
             //
             productoRepository.save(producto);
@@ -125,22 +126,20 @@ public class VentaController extends HttpServlet {
 
     }
     @PostMapping("/factura")
-    String invoice(@RequestBody List<Object> productos) throws JRException {
+    String invoice(@RequestBody ArrayList<Object> productos) throws JRException {
         //Reporte
-        DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         List<Tblventa> venta = new ArrayList<>();
         for (Object variable : productos){
             Tblventa ven = new Tblventa();
-            List<String> p = new ArrayList<>();
-            p.add((String) variable);
-            ven.setVencantidadunidades(Integer.parseInt(p.get(1)));
-            ven.setVeniva(Integer.parseInt(p.get(2)));
-            ven.setVenvalorpagar(Integer.parseInt(p.get(3)));
+            List<Object> p;
+            p = (List<Object>) variable;
+            ven.setVencantidadunidades((Integer) p.get(1));
+            ven.setVeniva((Integer) p.get(2));
+            ven.setVenvalorpagar((Integer) p.get(3));
             ven.setVenproducto((String) p.get(4));
             ven.setVencliente((String) p.get(5));
             ven.setVenfechaactual((String) p.get(6));
             venta.add(ven);
-
         }
         //System.out.println(total);
         InputStream reportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("Reports/venta2.jrxml");
@@ -198,7 +197,7 @@ public class VentaController extends HttpServlet {
         }
         DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String fecha = dtf2.format(LocalDateTime.now());
-        System.out.println(fecha);
+        //System.out.println(fecha);
         tblventa.setVenfechaactual(fecha);
         //System.out.println(tblventa.getVenfechaactual());
         Tblproducto producto = productoRepository.findById(idProduct).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));;

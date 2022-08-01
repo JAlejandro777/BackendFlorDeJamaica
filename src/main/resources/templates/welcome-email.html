@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:remove="all">Template for HTML email</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style>
+             .pie-pagina .grupo-2 {
+                background-color: #000000;
+                padding: 15px 10px;
+                text-align: center;
+                color: #fff;
+              }
+              .pie-pagina .grupo-2 small {
+                font-size: 15px;
+              }
+              p{
+                color:#FFFFFF;
+                font-size:20px
+              }
+        </style>
+    </head>
+    <body>
+        <div style="background-color:#1B012B;padding:30px">
+            <p>
+                Hola, <span th:text="${name}"></span>!
+            </p>
+            <p>
+                El código de recuperación para su cuenta del sistema de información Flor de Jamaica es :
+                <strong th:text="${codigo}"></strong>
+            </p>
+            <p>
+              Gracias por preferirnos. ¡Que tengas un excelente día!.
+            </p>
+        </div>
+        <div class="pie-pagina">
+            <div class="grupo-2">
+                <small
+                >&copy; 2022 <b>Jhoan Alejandro Infante Moreno</b> - Todos los derechos reservados.
+                </small>
+            </div>
+        </div>
+    </body>
+</html>
