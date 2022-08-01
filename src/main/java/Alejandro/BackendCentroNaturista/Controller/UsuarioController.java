@@ -126,4 +126,28 @@ public class UsuarioController{
     public List<Tblusuario> getUsuarios() {
         return usuarios;
     }
+    @PostMapping("/existenciaCorreo")
+    String existenciaCorreo(@RequestBody String Correo){
+        JSONObject json = new JSONObject(Correo);
+        String correo = json.getString("usucorreo");
+        //System.out.println(correo);
+        for(Tblusuario u: this.usuarios){
+            if(correo.equals(u.getUsucorreo())){
+                return "Correo Existente";
+            }
+        }
+        return "Correo Inexistente";
+    }
+    @PostMapping("/existenciaCedula")
+    String existenciaCedula(@RequestBody String Cedula){
+        JSONObject json = new JSONObject(Cedula);
+        String cedula = json.getString("usucedula");
+        //System.out.println(cedula);
+        for(Tblusuario u: this.usuarios){
+            if(cedula.equals(u.getUsucedula())){
+                return "Cedula Existente";
+            }
+        }
+        return "Cedula Inexistente";
+    }
 }
