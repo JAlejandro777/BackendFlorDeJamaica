@@ -46,7 +46,8 @@ public class UsuarioController{
     @Autowired
     RolController rolController;
     @PostMapping("/usuarios")
-    String validation(@RequestBody String credenciales){
+    List<String> validation(@RequestBody String credenciales){
+        List<String> response =  new ArrayList<>();
         JSONObject json = new JSONObject(credenciales);
         String correo = json.getString("correo");
         String contrasena = json.getString("contrasena");
@@ -57,11 +58,13 @@ public class UsuarioController{
             if((u.getUsucorreo().equals(correo)) && (ARGON2.verify(u.getUsucontrasena(), contrasena ))){
                 int r = u.getTblrol_rolid();
                 Tblrol rol = rolRepository.findById(Long.valueOf(r)).orElseThrow(() -> new Exception("p-400","No se encontro el rol"));
-                return rol.getRolnombre();
+                response.add(rol.getRolnombre());
+                response.add(u.getUsunombre());
+                return response;
             }
 
         }
-        return "NO";
+        return response;
     }
     @PostMapping("/usuario")
     Tblusuario newUser(@RequestBody Tblusuario tblusuario) {
