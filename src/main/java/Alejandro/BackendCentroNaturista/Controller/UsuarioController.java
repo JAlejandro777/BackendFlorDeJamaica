@@ -68,17 +68,17 @@ public class UsuarioController{
     }
     @PostMapping("/usuario")
     Tblusuario newUser(@RequestBody Tblusuario tblusuario) {
-        boolean flag = false;
+        //boolean flag = false;
+        /*
         for (Tblrol variable : rolController.getAllRol())
         {
             if (variable.getRolid() == tblusuario.getTblrol_rolid()) {
                 flag = true;
             }
         }
-        if(!flag){
-            String rol = "Rol " + tblusuario.getTblrol_rolid() + " incorrecto!";
-            throw new Exception("P-400", rol);
-        }
+         */
+        rolRepository.findById((long) tblusuario.getTblrol_rolid()).orElseThrow(() -> new Exception("p-400","No se encontro el rol " + tblusuario.getTblrol_rolid()));
+
         if(tblusuario.getUsucedula().equals("")  || (tblusuario.getUsucedula().length() > 10)){
             throw new Exception("P-400","Cedula incorrecta");
         }
