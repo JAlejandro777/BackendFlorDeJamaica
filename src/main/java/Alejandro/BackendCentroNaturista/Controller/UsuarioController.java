@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 
 //@RequestMapping("/FlorDeJamaica")
 public class UsuarioController{
-    private List<Tblusuario> usuarios;
+    public List<Tblusuario> usuarios;
     private static final Argon2 ARGON2 = Argon2Factory.create();
 
     private static final int ITERATIONS = 2;
@@ -55,7 +55,9 @@ public class UsuarioController{
         //usuarios = (List<Tblusuario>) usuarioRespository.findAll();
         //System.out.println("User:" + usuario + " Pass" + contrasena  );
         for (Tblusuario u:this.usuarios) {
+            //cambiar el findall por el this.usuarios
             if((u.getUsucorreo().equals(correo)) && (ARGON2.verify(u.getUsucontrasena(), contrasena ))){
+                System.out.println("CORRECTO!");
                 int r = u.getTblrol_rolid();
                 Tblrol rol = rolRepository.findById(Long.valueOf(r)).orElseThrow(() -> new Exception("p-400","No se encontro el rol"));
                 response.add(rol.getRolnombre());
@@ -64,7 +66,7 @@ public class UsuarioController{
             }
 
         }
-        return response;
+        throw new Exception("P-400","Credenciales incorrectas!");
     }
     @PostMapping("/usuario")
     Tblusuario newUser(@RequestBody Tblusuario tblusuario) {
