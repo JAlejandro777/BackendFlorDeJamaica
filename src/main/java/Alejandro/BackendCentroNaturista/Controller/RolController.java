@@ -17,7 +17,7 @@ public class RolController {
     @Autowired
     RolRepository rolRepository;
     @PostMapping("/rol")
-    Tblrol newUser(@RequestBody Tblrol tblrol) {
+    Tblrol newRol(@RequestBody Tblrol tblrol) {
         if(tblrol.getRolnombre().equals("")){
             throw new Exception("P-400","Nombre incorrecto");
         }

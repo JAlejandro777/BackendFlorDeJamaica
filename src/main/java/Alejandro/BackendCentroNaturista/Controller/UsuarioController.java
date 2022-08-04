@@ -68,15 +68,6 @@ public class UsuarioController{
     }
     @PostMapping("/usuario")
     Tblusuario newUser(@RequestBody Tblusuario tblusuario) {
-        //boolean flag = false;
-        /*
-        for (Tblrol variable : rolController.getAllRol())
-        {
-            if (variable.getRolid() == tblusuario.getTblrol_rolid()) {
-                flag = true;
-            }
-        }
-         */
         rolRepository.findById((long) tblusuario.getTblrol_rolid()).orElseThrow(() -> new Exception("p-400","No se encontro el rol " + tblusuario.getTblrol_rolid()));
 
         if(tblusuario.getUsucedula().equals("")  || (tblusuario.getUsucedula().length() > 10)){

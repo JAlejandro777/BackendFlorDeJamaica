@@ -6,6 +6,7 @@ import Alejandro.BackendCentroNaturista.Model.Tblproveedor;
 import Alejandro.BackendCentroNaturista.Model.Tblusuario;
 import Alejandro.BackendCentroNaturista.Repositories.ProductoRepository;
 import Alejandro.BackendCentroNaturista.Repositories.ProveedorRepository;
+import Alejandro.BackendCentroNaturista.Repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -27,38 +28,18 @@ public class ProductoController {
     @Autowired
     ProductoRepository productoRepository;
     @Autowired
-    ProveedorController proveedorController;
-    @Autowired
     ProveedorRepository proveedorRepository;
     @Autowired
-    UsuarioController usuarioController;
+    UsuarioRepository usuarioRepository;
     @PostMapping("/producto")
     Tblproducto newProduct(@RequestBody Tblproducto tblproducto) throws ParseException {
-        for (Tblproducto i : this.productos){
-            if (i.getProcodigo().equals(tblproducto.getProcodigo())){
-                throw new Exception("P-400","Código existente!");
-            }
+        Optional<Tblproducto> pro = productoRepository.findById(tblproducto.getProcodigo());
+        if(pro.isPresent()) {
+            throw new Exception("P-400","Código existente!");
         }
-        boolean flag = false;
-        for (Tblproveedor variable : proveedorController.getAllSupplier())
-        {
-            if (variable.getProid().equals(tblproducto.getTblproveedor_proid())) {
-                flag = true;
-            }
-        }
-        if(!flag){
-            throw new Exception("P-400","Proveedor Incorrecto!");
-        }
-        boolean flag2 = false;
-        for (Tblusuario variable : usuarioController.getAllUsers())
-        {
-            if (variable.getUsucorreo().equals(tblproducto.getTblusuario_usuid())) {
-                flag2 = true;
-            }
-        }
-        if(!flag2){
-            throw new Exception("P-400","Usuario Incorrecto!");
-        }
+        Tblproveedor prov = proveedorRepository.findById(tblproducto.getTblproveedor_proid()).orElseThrow(() -> new Exception("P-400","Proveedor Incorrecto!"));
+        Tblusuario usu = usuarioRepository.findNamebyId(tblproducto.getTblusuario_usuid()).orElseThrow(() -> new Exception("P-400","Usuario Incorrecto!"));
+
         if(tblproducto.getPronombre().equals("") ){
             throw new Exception("P-400","Nombre Incorrecto!");
         }

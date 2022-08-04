@@ -18,7 +18,6 @@ public class ProveedorController {
     ProveedorRepository proveedorRepository;
     @GetMapping("/proveedor")
     public List<Tblproveedor> getAllSupplier() {
-
-        return (List<Tblproveedor>) proveedorRepository.findAll();
+        return proveedorRepository.findAll();
     }
 }
