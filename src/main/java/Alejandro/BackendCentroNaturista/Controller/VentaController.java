@@ -4,6 +4,7 @@ import Alejandro.BackendCentroNaturista.Excepcion.Exception;
 import Alejandro.BackendCentroNaturista.Model.Tblcliente;
 import Alejandro.BackendCentroNaturista.Model.Tblproducto;
 import Alejandro.BackendCentroNaturista.Model.Tblventa;
+import Alejandro.BackendCentroNaturista.Repositories.ClienteRepository;
 import Alejandro.BackendCentroNaturista.Repositories.ProductoRepository;
 import Alejandro.BackendCentroNaturista.Repositories.VentaRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,46 +40,29 @@ public class VentaController extends HttpServlet {
     @Autowired
     ProductoRepository productoRepository;
     @Autowired
-    ClienteController clienteController;
+    ClienteRepository clienteRepository;
     @Autowired
     ProductoController productoController;
     @PutMapping("/sale/{id}")
     public Tblventa updateSale(@PathVariable("id") long id, @RequestBody Tblventa ven) {
-        //System.out.println(ven);
-        String idProduct = "";
-        for (Tblproducto variable : productoController.getAllProducts())
-        {
-            if (variable.getPronombre().equals(ven.getVenproducto())) {
-                idProduct = variable.getProcodigo();
-            }
-        }
-        Tblproducto producto = productoRepository.findById(idProduct).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));;
+        Tblproducto producto = productoRepository.findNamebyId(ven.getVenproducto()).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));
         try {
             Tblventa venta = ventaRepository.findById(id).orElseThrow(() -> new Exception("p-400", "No se encontro la venta"));
             DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String fecha = dtf2.format(LocalDateTime.now());
             venta.setVenfechaactual(fecha);
-            //System.out.println("fechaaa"+ venta.getVenfechaactual());
-            //venta.setVenfechaactual(ven.getVenfechaactual());
             venta.setVencliente(ven.getVencliente());
             venta.setVenproducto(ven.getVenproducto());
             venta.setVeniva(ven.getVeniva());
             if(venta.getVencantidadunidades() > ven.getVencantidadunidades()){
                 int ud = producto.getProunidadesdisponibles() + (venta.getVencantidadunidades() - ven.getVencantidadunidades());
                 producto.setProunidadesdisponibles(ud);
-                //System.out.println(producto.getProunidadesdisponibles());
             }else{
-
                 int ud = producto.getProunidadesdisponibles() - (ven.getVencantidadunidades() - venta.getVencantidadunidades());
                 producto.setProunidadesdisponibles(ud);
-                //System.out.println(producto.getProunidadesdisponibles());
             }
             venta.setVencantidadunidades(ven.getVencantidadunidades());
             venta.setVenvalorpagar(ven.getVenvalorpagar());
-            //System.out.println(venta.getVencantidadunidades());
-            //System.out.println(ven.getVencantidadunidades());
-
-            //
             productoRepository.save(producto);
             return ventaRepository.save(venta);
         }catch (Exception e){
@@ -88,16 +72,8 @@ public class VentaController extends HttpServlet {
     }
     @DeleteMapping("/sale/{id}")
     String delete(@PathVariable("id") long id){
-        //System.out.println("JAJAJAJA");
-        String idProduct = "";
         Tblventa ven = ventaRepository.findById(id).orElseThrow(() -> new Exception("p-400", "No se encontro la venta"));
-        for (Tblproducto variable : productoController.getAllProducts())
-        {
-            if (variable.getPronombre().equals(ven.getVenproducto())) {
-                idProduct = variable.getProcodigo();
-            }
-        }
-        Tblproducto producto = productoRepository.findById(idProduct).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));;
+        Tblproducto producto = productoRepository.findNamebyId(ven.getVenproducto()).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));
         try {
             producto.setProunidadesdisponibles(producto.getProunidadesdisponibles() + ven.getVencantidadunidades());
             productoRepository.save(producto);
@@ -158,8 +134,7 @@ public class VentaController extends HttpServlet {
         return pdfBase64;
     }
     @PostMapping("/venta")
-    Tblventa newUser(@RequestBody Tblventa tblventa) throws FileNotFoundException, JRException {
-        String idProduct = "";
+    Tblventa newSale(@RequestBody Tblventa tblventa) throws FileNotFoundException, JRException {
         if(tblventa.getVencantidadunidades() <= 0){
             throw new Exception("P-400","Cantidad Unidades incorrecta");
         }
@@ -169,44 +144,20 @@ public class VentaController extends HttpServlet {
         if(tblventa.getVenvalorpagar() <= 0){
             throw new Exception("P-400","Valor a Pagar incorrecto");
         }
-        boolean flag = false;
-        for (Tblproducto variable : productoController.getAllProducts())
-        {
-            if (variable.getPronombre().equals(tblventa.getVenproducto())) {
-                if(variable.getProunidadesdisponibles() < 1 ){
-                    throw new Exception("P-400","No hay unidades!");
-                }
-                if(variable.getProunidadesdisponibles() < tblventa.getVencantidadunidades()){
-                    throw new Exception("P-400","No hay esta cantidad!");
-                }
-                idProduct = variable.getProcodigo();
-                flag = true;
-            }
+        Tblproducto producto = productoRepository.findNamebyId(tblventa.getVenproducto()).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));
+        if(producto.getProunidadesdisponibles() < 1 ){
+            throw new Exception("P-400","No hay unidades!");
         }
-        if(!flag){
-            throw new Exception("P-400","Producto Incorrecto!");
+        if(producto.getProunidadesdisponibles() < tblventa.getVencantidadunidades()){
+            throw new Exception("P-400","No hay esta cantidad!");
         }
-        boolean flag2 = false;
-        for (Tblcliente variable : clienteController.getAllCustomers()) {
-            if (variable.getClinombre().equals(tblventa.getVencliente())) {
-                flag2 = true;
-            }
-        }
-        if(!flag2){
-            throw new Exception("P-400","Cliente incorrecto");
-        }
+        Tblcliente cli = clienteRepository.findNamebyId(tblventa.getVencliente()).orElseThrow(() -> new Exception("p-400","No se encontro el cliente"));
         DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String fecha = dtf2.format(LocalDateTime.now());
-        //System.out.println(fecha);
         tblventa.setVenfechaactual(fecha);
-        //System.out.println(tblventa.getVenfechaactual());
-        Tblproducto producto = productoRepository.findById(idProduct).orElseThrow(() -> new Exception("p-400","No se encontro el producto"));;
-        //System.out.println(producto.getProunidadesdisponibles());
         producto.setProunidadesdisponibles(producto.getProunidadesdisponibles() - tblventa.getVencantidadunidades());
-        //System.out.println(producto.getProunidadesdisponibles());
         productoRepository.save(producto);
-        Tblventa tblventa2 = ventaRepository.save(tblventa);
-        return tblventa2;
+        return ventaRepository.save(tblventa);
     }
     @GetMapping("/venta/{id}")
     Tblventa getVenta(@PathVariable Long id) {

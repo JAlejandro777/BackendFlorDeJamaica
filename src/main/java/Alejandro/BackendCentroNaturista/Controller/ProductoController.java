@@ -66,15 +66,14 @@ public class ProductoController {
     }
     @GetMapping("/producto")
     public List<Tblproducto> getAllProducts() {
-        this.productos = (List<Tblproducto>) productoRepository.findAll();
+        this.productos = productoRepository.findAll();
         return this.productos;
     }
     @GetMapping("/productoView")
     public List<Tblproducto> getAllProductsView() {
-        List<Tblproducto> productosV = (List<Tblproducto>) productoRepository.findAll();
+        List<Tblproducto> productosV = productoRepository.findAll();
         System.out.println(productosV);
         for(Tblproducto i: productosV){
-
             Tblproveedor p = proveedorRepository.findById(i.getTblproveedor_proid()).orElseThrow(() -> new Exception("p-400","No se encontro El producto"));
             i.setTblproveedor_proid(p.getPronombre());
             System.out.println(i.getTblproveedor_proid());

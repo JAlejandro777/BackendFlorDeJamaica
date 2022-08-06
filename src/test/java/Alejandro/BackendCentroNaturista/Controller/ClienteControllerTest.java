@@ -39,7 +39,7 @@ class ClienteControllerTest {
     }
     @Test
     void testFindCliente() throws Exception{
-        when(clienteRepository.findById("1000000000")).thenReturn(Optional.ofNullable(this.cliente));
+        when(clienteRepository.findById("")).thenReturn(Optional.ofNullable(this.cliente));
         assertNotNull(clienteController.getCustomer("1000000000"));
     }
     @Test

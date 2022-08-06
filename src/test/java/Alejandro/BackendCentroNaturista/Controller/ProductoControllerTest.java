@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +39,7 @@ class ProductoControllerTest {
         this.producto.setProcaracteristica("Capsulas color amarillo");
         this.producto.setProcategoria("Vitaminas");
         this.producto.setProfechaingreso("2022-08-04");
-        this.producto.setProfechavencimiento("2022-08-04");
+        this.producto.setProfechavencimiento("2024-08-04");
         this.producto.setPronombre("Vitamina c");
         this.producto.setPropreciosugerido(15000);
         this.producto.setProunidadesdisponibles(50);
@@ -66,5 +67,15 @@ class ProductoControllerTest {
         when(proveedorRepository.findById("9999")).thenReturn(Optional.ofNullable(this.proveedor));
         when(usuarioRepository.findNamebyId("Alejandro")).thenReturn(Optional.ofNullable(this.usuario));
         assertNotNull(productoController.newProduct(this.producto));
+    }
+    @Test
+    void testAllProducts() throws Exception{
+        when(productoRepository.findAll()).thenReturn(Arrays.asList(this.producto));
+        assertNotNull(productoController.getAllProducts());
+    }
+    @Test
+    void testProductById() throws Exception{
+        when(productoRepository.findById("123456")).thenReturn(Optional.ofNullable(this.producto));
+        assertNotNull(productoController.getProduct("123456"));
     }
 }
