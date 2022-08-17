@@ -61,7 +61,6 @@ public class ProductoController {
         if(tblproducto.getProfechavencimiento().equals("") ){
             throw new Exception("P-400","Fecha Vencimiento Incorrecta!");
         }
-
         return productoRepository.save(tblproducto);
     }
     @GetMapping("/producto")

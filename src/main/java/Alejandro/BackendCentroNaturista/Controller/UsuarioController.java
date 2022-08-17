@@ -88,10 +88,8 @@ public class UsuarioController{
         if(tblusuario.getUsucontrasena().equals("")){
             throw new Exception("P-400","Contraseña incorrecta");
         }
-        //String pass  = BCrypt.hashpw(tblusuario.getUsucontrasena(), BCrypt.gensalt());
         String pass = ARGON2.hash(ITERATIONS, MEMORY, PARALLELISM, tblusuario.getUsucontrasena());
         tblusuario.setUsucontrasena(pass);
-        //System.out.println("contraseña:" + tblusuario.getUsucontrasena());
         return usuarioRespository.save(tblusuario);
     }
     @GetMapping("/usuario")
@@ -102,19 +100,24 @@ public class UsuarioController{
     }
     @GetMapping("/usuarios")
     public String getAllUsersReport() throws FileNotFoundException, JRException {
-        InputStream reportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("Reports/usuario.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
-        File fichero = new File("src/main/resources/logoFJ.png");
-        List<Tblusuario> usuarios = new ArrayList<>();
-        //usuarios = (List<Tblusuario>) usuarioRespository.findAll();
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(this.usuarios);
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("Created By","Alejandro");
-        parameters.put("path", fichero.getAbsolutePath());
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,parameters,dataSource);
-        byte[] pdf = JasperExportManager.exportReportToPdf(jasperPrint);
-        String pdfBase64 = Base64.getEncoder().encodeToString(pdf);
-        return pdfBase64;
+        try {
+            InputStream reportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("Reports/usuario.jrxml");
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
+            File fichero = new File("src/main/resources/logoFJ.png");
+            List<Tblusuario> usuarios = new ArrayList<>();
+            //usuarios = (List<Tblusuario>) usuarioRespository.findAll();
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(this.usuarios);
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("Created By","Alejandro");
+            parameters.put("path", fichero.getAbsolutePath());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,parameters,dataSource);
+            byte[] pdf = JasperExportManager.exportReportToPdf(jasperPrint);
+            String pdfBase64 = Base64.getEncoder().encodeToString(pdf);
+            return pdfBase64;
+        }catch(java.lang.Exception e){
+            String error = "Error en el reporte: " + e;
+            throw new Exception("P-400",error);
+        }
 
     }
     public List<Tblusuario> getUsuarios() {

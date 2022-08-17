@@ -78,4 +78,5 @@ class ProductoControllerTest {
         when(productoRepository.findById("123456")).thenReturn(Optional.ofNullable(this.producto));
         assertNotNull(productoController.getProduct("123456"));
     }
+
 }

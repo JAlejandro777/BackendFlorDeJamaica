@@ -62,10 +62,5 @@ class UsuarioControllerTest {
         when(rolRepository.findById(new Long(1))).thenReturn(Optional.ofNullable(this.tblrol));
         assertNotNull(usuarioController.newUser(this.tblusuario));
     }
-    @Test
-    void testNewSesion() throws Exception{
-        when(usuarioRepository.findAll()).thenReturn(Arrays.asList(this.tblusuario));
-        when(rolRepository.findById(new Long(1))).thenReturn(Optional.ofNullable(this.tblrol));
-        assertNotNull(usuarioController.validation(String.valueOf(this.json)));
-    }
+
 }

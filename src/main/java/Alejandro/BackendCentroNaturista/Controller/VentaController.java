@@ -169,7 +169,7 @@ public class VentaController extends HttpServlet {
         return this.ventas;
     }
     @GetMapping("/venta")
-    public String getAllCustomers(HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException, JRException, ServletException, IOException {
+    public String createReportSales(HttpServletRequest request, HttpServletResponse response) throws FileNotFoundException, JRException, ServletException, IOException {
         try{
             InputStream reportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("Reports/venta.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport(reportStream);
