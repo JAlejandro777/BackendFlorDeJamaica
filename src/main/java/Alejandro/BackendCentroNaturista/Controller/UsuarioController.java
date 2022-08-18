@@ -45,7 +45,7 @@ public class UsuarioController{
     RolRepository rolRepository;
     @Autowired
     RolController rolController;
-    @PostMapping("/usuarios")
+    @PostMapping("/validationCredenciales")
     List<String> validation(@RequestBody String credenciales){
         List<String> response =  new ArrayList<>();
         JSONObject json = new JSONObject(credenciales);
